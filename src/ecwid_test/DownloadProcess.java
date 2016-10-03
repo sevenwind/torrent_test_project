@@ -54,7 +54,7 @@ public class DownloadProcess extends Thread {
 	    FileOutputStream fout = null;
 	    try {
 	    	if(item.parentName.length() > 0){
-	    		if(Files.exists(Paths.get(targetFolderPath + File.separator + item.name)))
+	    		if(Files.exists(Paths.get(targetFolderPath + File.separator + item.parentName)))
 	    			Files.createSymbolicLink(Paths.get(targetFolderPath + File.separator + item.name), Paths.get(targetFolderPath + File.separator + item.parentName));
 	    	}else{
 		        in = new BufferedInputStream(new URL(item.link).openStream());
