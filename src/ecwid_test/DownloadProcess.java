@@ -82,7 +82,7 @@ public class DownloadProcess extends Thread {
 			        	end = System.nanoTime();
 			            traceTime = end-start;
 		        	}
-		        	System.out.println("Thread is "+this.counter+". Downloaded " + current_size / (1024*1024) +" Mb " + current_size / 1024 +" Kb " + current_size +" b");
+		        	System.out.println("Thread is "+this.counter+". Downloaded " + current_size / (1024*1024) +" Mb or " + current_size / 1024 +" Kb or " + current_size +" b");
 		        	this.link_to_full_size_counter.addAndGet(current_size);
 		        	traceTime = 0;
 		        	current_size = 0;
