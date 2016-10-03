@@ -1,9 +1,7 @@
 <project name="ecwid_test" default="compile">
 	<target name="compile">
-		<javac srcdir="./src" destdir="./.build/ecwid_test"></javac>
-	</target>
-	<target name="jar">
-	        <jar destfile="./.build/jar/utility.jar" basedir="./.build/ecwid_test">
+			<javac srcdir="./src" destdir="./build/ecwid_test"></javac>
+	        <jar destfile="./build/jar/utility.jar" basedir="./build/ecwid_test">
 	        	<manifest>
 	        	    <attribute name="Main-Class" value="ecwid_test.Program"/>
 	        	</manifest>

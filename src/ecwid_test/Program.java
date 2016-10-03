@@ -6,7 +6,6 @@ public class Program {
 
 	public static void main(String[] args) {
 		try{
-			List<String> keys = new ArrayList<String>(Arrays.asList("-n", "-l", "-f", "-o"));
 			int threadsNum = 0;
 			String maxSpeed = "";
 			String pathToFileWithLinks = "";
@@ -27,8 +26,7 @@ public class Program {
 					pathToTargetFolder = args[i+1];
 					break;
 				default:
-					System.out.println("Invalid key - " + args[i]);
-					break;
+					throw new RuntimeException("Invalid parametrs!");
 				}
 		    }
 		    
@@ -39,7 +37,7 @@ public class Program {
 		    	System.out.println("Invalid parametrs!");
 		    }
 		}catch (Exception e) {
-			System.out.println("Error = " + e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 }

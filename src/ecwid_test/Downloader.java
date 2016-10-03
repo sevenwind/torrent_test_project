@@ -51,11 +51,13 @@ public class Downloader {
 		start_time = System.nanoTime();
 		statistic_full_download_size = new AtomicInteger [this.threadsNum];
 		DownloadProcess[] threads = new DownloadProcess[this.threadsNum];
+		
 		for(int i = 0;i < this.threadsNum; i++){
 			statistic_full_download_size[i] = new AtomicInteger(0);
-			threads[i] = new DownloadProcess(queue, i, targetFolderPath, maxSpeed, statistic_full_download_size[i], threadComplateCounter);
+			threads[i] = new DownloadProcess(this.queue, i, this.targetFolderPath, this.maxSpeed / this.threadsNum, statistic_full_download_size[i], this.threadComplateCounter);
 			threads[i].start();
 		}
+		
 		while(true){
 			if(threadComplateCounter.get() == threadsNum){
 				int full_downloaded_byte_size = 0;

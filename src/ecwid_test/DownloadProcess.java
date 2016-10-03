@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DownloadProcess extends Thread {
 
 	private final int SECOND = 1000000000;
+	private final int BYTE_ARRAY_SIZE = 102400;
 
 	private Queue<String> queue;
 	private int counter;
@@ -52,7 +53,7 @@ public class DownloadProcess extends Thread {
 	        in = new BufferedInputStream(new URL(urlString).openStream());
 	        fout = new FileOutputStream(filename);
 
-	        final byte data[] = new byte[this.maxSpeed];
+	        final byte data[] = new byte[this.maxSpeed > BYTE_ARRAY_SIZE ? BYTE_ARRAY_SIZE : this.maxSpeed];
 	        int count = 1;
 	        int current_size = 0;
 	        while (count > 0) {
@@ -61,8 +62,8 @@ public class DownloadProcess extends Thread {
 	        	long traceTime = 0;
 	        	
 	        	while(traceTime < SECOND) {
-		        	if(current_size < this.maxSpeed){
-			        	count = in.read(data, 0, this.maxSpeed);
+		        	if(current_size < this.maxSpeed) {
+			        	count = in.read(data, 0, this.maxSpeed > BYTE_ARRAY_SIZE ? BYTE_ARRAY_SIZE : this.maxSpeed);
 			        	if(count == -1){
 			        		break;
 			        	}
