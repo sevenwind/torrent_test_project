@@ -2,10 +2,8 @@ package ecwid_test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.text.NumberFormat;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,21 +20,33 @@ public class Downloader {
 	public String targetFolderPath;
 	public int maxSpeed;
 	public int threadsNum;
-	private Queue<String> queue;
+	private Queue<DownloadObject> queue;
 
 	public Downloader(int _threadsNum, String _maxSpeed, String _filePath, String _targetFolderPath) throws IOException{
-		this.queue = new ConcurrentLinkedQueue<String>();
+		this.queue = new ConcurrentLinkedQueue<DownloadObject>();
 		this.threadsNum = _threadsNum;
 		this.targetFolderPath = _targetFolderPath;
 		if(new File(_targetFolderPath).exists() == false){
 			throw new IOException("Folder " + _targetFolderPath + " not exists!");
 		}
 		try{
+			List<DownloadObject> downloadObjectsList = new ArrayList<DownloadObject>();
 			Scanner scnr = new Scanner(new File(_filePath));
 			while(scnr.hasNextLine()){
-				this.queue.add(scnr.nextLine());
+				String [] linkAndName = scnr.nextLine().split(" ");
+				DownloadObject existingObject = getObjIfExistsByLink(downloadObjectsList, linkAndName[0]);
+				if (existingObject != null){
+					DownloadObject item = new DownloadObject();
+					item.link = linkAndName[0];
+					item.name = linkAndName[1];
+					item.parentName = existingObject.name;
+					downloadObjectsList.add(item);
+				}else{
+					downloadObjectsList.add(new DownloadObject(linkAndName[0], linkAndName[1]));
+				}
 			}
 			scnr.close();
+			this.queue.addAll(downloadObjectsList);
 			Boolean haveSuffix = _maxSpeed.toLowerCase().indexOf("k") >= 0 || _maxSpeed.toLowerCase().indexOf("m") >= 0;
 			NumberFormat nf = NumberFormat.getInstance();
 			if(haveSuffix){
@@ -75,6 +85,29 @@ public class Downloader {
 	            System.out.println("Full time for download: " + Double.valueOf(traceTime) / 1000000000 + " sec");
 				break;
 			}
+		}
+	}
+	
+	public DownloadObject getObjIfExistsByLink(List<DownloadObject> list, String link){
+		for (DownloadObject downloadObject : list) {
+			if(downloadObject.link.equals(link)){
+				return downloadObject;
+			}
+		}
+		return null;
+	}
+	
+	class DownloadObject{
+		String link;
+		String name;
+		String parentName;
+		
+		DownloadObject(){}
+		
+		DownloadObject(String _link, String _name){
+			this.link = _link;
+			this.name = _name;
+			this.parentName = "";
 		}
 	}
 }
