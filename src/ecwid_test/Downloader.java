@@ -1,6 +1,8 @@
 package ecwid_test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.Queue;
 import java.util.Scanner;
@@ -22,10 +24,13 @@ public class Downloader {
 	public int threadsNum;
 	private Queue<String> queue;
 
-	public Downloader(int _threadsNum, String _maxSpeed, String _filePath, String _targetFolderPath){
+	public Downloader(int _threadsNum, String _maxSpeed, String _filePath, String _targetFolderPath) throws IOException{
 		this.queue = new ConcurrentLinkedQueue<String>();
 		this.threadsNum = _threadsNum;
 		this.targetFolderPath = _targetFolderPath;
+		if(new File(_targetFolderPath).exists() == false){
+			throw new IOException("Folder " + _targetFolderPath + " not exists!");
+		}
 		try{
 			Scanner scnr = new Scanner(new File(_filePath));
 			while(scnr.hasNextLine()){
@@ -64,7 +69,7 @@ public class Downloader {
 				for (AtomicInteger thread_downloaded_byte_size : statistic_full_download_size) {
 					full_downloaded_byte_size += thread_downloaded_byte_size.get();
 				}
-				System.out.println("Full download size is " + full_downloaded_byte_size / megabyteSize + " Mb " + full_downloaded_byte_size / kilobyteSize + " Kb " + full_downloaded_byte_size + " b");
+				System.out.println("Full download size is " + full_downloaded_byte_size / megabyteSize + " Mb or " + full_downloaded_byte_size / kilobyteSize + " Kb or " + full_downloaded_byte_size + " b");
 				long end_time = System.nanoTime();
 	            long traceTime = end_time-start_time;
 	            System.out.println("Full time for download: " + Double.valueOf(traceTime) / 1000000000 + " sec");
