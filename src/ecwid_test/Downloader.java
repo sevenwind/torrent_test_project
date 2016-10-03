@@ -27,7 +27,7 @@ public class Downloader {
 		this.threadsNum = _threadsNum;
 		this.targetFolderPath = _targetFolderPath;
 		if(new File(_targetFolderPath).exists() == false){
-			throw new IOException("Folder " + _targetFolderPath + " not exists!");
+			new File(_targetFolderPath).mkdir();
 		}
 		try{
 			List<DownloadObject> downloadObjectsList = new ArrayList<DownloadObject>();
